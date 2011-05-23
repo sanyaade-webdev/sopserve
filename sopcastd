@@ -1,7 +1,6 @@
 #!/bin/bash
 
 SOPCAST=/usr/bin/sp-sc
-UNBUFFER=/usr/bin/unbuffer
 BROKER=sop://broker.sopcast.com:3912
 LOCALPORT=3908
 PLAYPORT=
@@ -86,5 +85,5 @@ then
     exit 1
 fi
 
-$UNBUFFER $SOPCAST $BROKER/$CHANNEL $LOCALPORT $PLAYPORT &> $LOGFILE &
+$SOPCAST $BROKER/$CHANNEL $LOCALPORT $PLAYPORT &> $LOGFILE &
 echo $! > $PIDFILE
