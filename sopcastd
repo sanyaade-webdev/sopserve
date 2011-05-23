@@ -1,0 +1,90 @@
+#!/bin/bash
+
+SOPCAST=/usr/bin/sp-sc
+UNBUFFER=/usr/bin/unbuffer
+BROKER=sop://broker.sopcast.com:3912
+LOCALPORT=3908
+PLAYPORT=
+CHANNEL=
+PIDFILE=
+LOGFILE=
+VERBOSE=
+
+function check_number()
+{
+    if [[ `echo $1 | grep "^[0-9]*$" | wc -l` -eq 0 ]]
+    then
+        usage
+        exit 1
+    fi
+}
+
+function usage()
+{
+    cat <<EOF
+usage: $0 -c channel -p port -P pidfile -l logfile
+
+Start sopcast as a 'daemon'
+
+OPTIONS:
+   -h      Show this message
+   -c      Channel id
+   -p      Output stream port
+   -P      PID file
+   -l      Log file
+   -v      Verbose
+EOF
+}
+
+while getopts “hc:p:P:l:v” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         c)
+             CHANNEL=$OPTARG
+             ;;
+         p)
+             PLAYPORT=$OPTARG
+             ;;
+         P)
+             PIDFILE=$OPTARG
+             ;;
+         l)
+             LOGFILE=$OPTARG
+             ;;
+         v)
+             VERBOSE=1
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [[ -z $CHANNEL ]] || [[ -z $PLAYPORT ]] || [[ -z $LOGFILE ]] || [[ -z $PIDFILE ]]
+then
+     usage
+     exit 1
+fi
+
+check_number $CHANNEL
+check_number $PLAYPORT
+
+if [ ! -d `dirname $LOGFILE` ]
+then
+    echo "Can't create log file: directory does not exist"
+    exit 1
+fi
+
+if [ ! -d `dirname $PIDFILE` ]
+then
+    echo "Can't create PID file: directory does not exist"
+    exit 1
+fi
+
+$UNBUFFER $SOPCAST $BROKER/$CHANNEL $LOCALPORT $PLAYPORT &> $LOGFILE &
+echo $! > $PIDFILE
