@@ -1,11 +1,14 @@
-source "http://rubygems.org"
+source :rubygems
 
 group :default do
+  gem "rack"
   gem "sinatra"
-  gem "mongrel"
+  gem "async_sinatra"
+  gem "eventmachine"
+  gem "thin"
   gem "daemon_controller"
 end
 
 group :development do
-  gem "shotgun"
+  gem "rerun"
 end
