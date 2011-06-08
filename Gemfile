@@ -10,5 +10,9 @@ group :default do
 end
 
 group :development do
+  gem "cucumber"
+  gem "cucumber-sinatra"
+  gem "capybara"
+  gem "rspec"
   gem "rerun"
 end

@@ -76,7 +76,7 @@ class StreamClient
 end
 
 
-class SopServer < Sinatra::Base
+class SopServe < Sinatra::Base
   register Sinatra::Async
 
   def initialize
@@ -137,5 +137,9 @@ class SopServer < Sinatra::Base
     client = StreamClient.new
     EM.connect('127.0.0.1', PORT, StreamListener, client)
     body client
+  end
+
+  get '/streams' do
+    'No running streams'
   end
 end
