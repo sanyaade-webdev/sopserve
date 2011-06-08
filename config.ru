@@ -1,3 +1,3 @@
-require 'sopserve'
+require 'lib/sopserve'
 
-run SopServer.new
+run SopServe.new

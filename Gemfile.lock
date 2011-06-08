@@ -34,6 +34,7 @@ GEM
     ffi (1.0.9)
     gherkin (2.3.7)
       json (>= 1.4.6)
+    haml (3.1.1)
     highline (1.6.2)
     json (1.5.1)
     json_pure (1.5.1)
@@ -83,6 +84,7 @@ DEPENDENCIES
   cucumber-sinatra
   daemon_controller
   eventmachine
+  haml
   rack
   rerun
   rspec

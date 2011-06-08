@@ -16,6 +16,9 @@ module NavigationHelpers
     when /the stream listing page/
       '/streams'
 
+    when /the (.*) stream page$/
+      "/stream/#{$1}"
+
     else
       raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
         "Now, go and add a mapping in #{__FILE__}"

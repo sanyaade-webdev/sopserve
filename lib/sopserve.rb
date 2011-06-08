@@ -6,6 +6,7 @@ require 'sinatra'
 require 'sinatra/async'
 require 'eventmachine'
 require 'daemon_controller'
+require 'haml'
 
 
 PORT = 8908
@@ -76,9 +77,7 @@ class StreamClient
 end
 
 
-class SopServe < Sinatra::Base
-  register Sinatra::Async
-
+class SopcastDaemon
   def initialize
     super
     @port = PORT
@@ -113,33 +112,37 @@ class SopServe < Sinatra::Base
     }
     DaemonController.new(options)
   end
+end
 
-  def set_listener(listener)
-    @listener = listener
+
+class SopServe < Sinatra::Base
+  register Sinatra::Async
+
+  def initialize
+    super
+    @daemons = Hash.new()
   end
 
-  get '/status' do
-    daemon.running? ? 'running' : 'not running'
+  post '/stream' do
+    stream_id = #{params[:id]}
+    @daemons[stream_id] = "Foo"
+    "Stream started (#{stream_id})"
   end
 
-  get '/start/:channel' do |channel|
-    daemon(channel).start
-    if daemon.running?
-      redirect "/stream"
-    end
-  end
-
-  get '/stop' do
-    daemon.stop
-  end
-
-  aget '/stream' do
-    client = StreamClient.new
-    EM.connect('127.0.0.1', PORT, StreamListener, client)
-    body client
+  get '/stream/:id' do |id|
+    <<-HTML
+      <form action='/stream' method="POST">
+        <input type="hidden" name="id" value="#{id}"/>
+        <input type="submit" value="Start"/>
+      </form>
+    HTML
   end
 
   get '/streams' do
-    'No running streams'
+    if @daemons.length > 0
+      'Streams running'
+    else
+      'No running streams'
+    end
   end
 end
