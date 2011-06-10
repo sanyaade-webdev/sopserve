@@ -13,6 +13,7 @@ end
 group :development do
   gem "cucumber"
   gem "cucumber-sinatra"
+  gem "eventmachine_httpserver"
   gem "capybara"
   gem "rspec"
   gem "rerun"

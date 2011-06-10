@@ -24,6 +24,10 @@ class FakeSocketClient < EventMachine::Connection
   def unbind
     @onclose.call if @onclose
   end
+
+  def get(path)
+    send_data("GET #{path} HTTP/1.1\r\n\r\n")
+  end
 end
 
 
