@@ -1,4 +1,5 @@
 # bundled
+require 'net/ssh'
 require 'sinatra/base'
 
 # local
