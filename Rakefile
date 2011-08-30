@@ -11,7 +11,7 @@ end
 desc "Run the application via rerun (auto-reloads on changes)"
 local_port = 9393
 task :dev do
-  system "bundle exec rerun -- rackup config.ru --port=#{local_port} --server thin"
+  system "bundle exec rerun -- zbatery"
 end
 
-task :default => :spec
+
