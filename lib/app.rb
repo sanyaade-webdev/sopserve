@@ -4,8 +4,19 @@ class ServerConnection
     @host, @user, @pass, @timeout  = host, user, pass, timeout
   end
 
-  def schedule_cleanup
-    @timer |= EM.add_timer(@timeout) { self.cleanup() }
+  def exec(cmd, params = {})
+    status = 0
+    schedule_cleanup
+    session.open_channel { |c|
+      c.on_request("exit-status", &Proc.new{|c, data| status = data.read_long })
+      c.on_data { |c, data | params[:on_data].call(data)} if params[:on_data]
+      c.exec cmd do |c, success|
+        raise "Command failed: #{cmd}" if not success
+        params[:on_start].call() if params[:on_start]
+      end
+    }
+    session.loop
+    return status
   end
 
   def cleanup
@@ -17,17 +28,15 @@ class ServerConnection
     end
   end
 
+  private
+
+  def schedule_cleanup
+    @timer |= EM.add_timer(@timeout) { self.cleanup() }
+  end
+
   def session
     raise "Missing server credentials" if @host.nil? || @user.nil? || @pass.nil?
     @session ||= Net::SSH.start(@host, @user, :password => @pass)
-  end
-
-  def exec(cmd, output_callback)
-    schedule_cleanup
-    session.exec! cmd do |ch, stream, data|
-      puts "Executing cmd: #{cmd}"
-      output_callback.call(data) if stream == :stdout
-    end
   end
 end
 
@@ -39,10 +48,23 @@ class ChannelStream
     @channel = channel
   end
 
-  def each
-    cmd = "sp-sc sop://broker.sopcast.com:3912/#{@channel} 3908 8908"
-    read_callback = Proc.new { |data| yield data }
-    @connection.exec(cmd, read_callback)
+  def process_started
+    puts "Started"
+  end
+
+  def process_stdout(output)
+    puts output
+  end
+
+  def command
+    "sp-sc sop://broker.sopcast.com:3912/#{@channel} 3908 8908"
+  end
+
+  def each(&block)
+    status = @connection.exec(command,
+                              :on_start => method(:process_started),
+                              :on_data => method(:process_stdout))
+    puts "Exit status: #{status}"
   end
 end
 
