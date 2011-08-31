@@ -1,8 +1,10 @@
 source :gemcutter
 
+gem 'eventmachine', '1.0.0.beta.3'
 gem 'sinatra', '1.2.6'
+gem 'sinatra-synchrony', '0.2.0'
+gem 'thin', '1.2.11'
 gem 'net-ssh', '2.2.1'
-gem 'zbatery', '4.1.0'
 
 group :development do
   gem 'rspec', '2.6.0'

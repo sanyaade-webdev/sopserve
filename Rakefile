@@ -1,7 +1,11 @@
 require 'rspec/core/rake_task'
 
+task :default => :spec
+
 desc "Run all RSpec tests"
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec) do |test|
+  test.rspec_opts = "-r ./config/load"
+end
 
 desc "Run an interactive console for the project"
 task :console do
@@ -9,9 +13,8 @@ task :console do
 end
 
 desc "Run the application via rerun (auto-reloads on changes)"
-local_port = 9393
 task :dev do
-  system "bundle exec rerun -- zbatery"
+  system "bundle exec rerun -- rackup --server=thin"
 end
 
 
