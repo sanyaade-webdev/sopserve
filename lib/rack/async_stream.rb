@@ -43,6 +43,7 @@ module Rack
 
       def each(&block)
         fiber = Fiber.new do
+          puts "Fiber started"
           @body.each do |str|
             block.call(str)
             EM.next_tick { fiber.resume }
@@ -50,6 +51,7 @@ module Rack
           end
           succeed
         end
+        puts "Starting fiber"
         fiber.resume
       end
     end
@@ -98,6 +100,7 @@ module Rack
 
     def log(env, message)
       return unless @logging
+      puts env['rack.logger']
       if logger = env['rack.logger']
         logger.info(message)
       else
@@ -106,7 +109,9 @@ module Rack
     end
 
     def call(env)
+      puts "here"
       status, headers, body = @app.call(env)
+      puts "now here"
       if status < 0 or @dont_wrap.include? body.class or !env['async.callback']
         [status, headers, body]
       else

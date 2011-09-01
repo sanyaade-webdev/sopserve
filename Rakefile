@@ -1,6 +1,6 @@
 require 'rspec/core/rake_task'
 
-task :default => :spec
+task :default => :dev
 
 desc "Run all RSpec tests"
 RSpec::Core::RakeTask.new(:spec) do |test|
