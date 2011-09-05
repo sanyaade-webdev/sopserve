@@ -1,10 +1,13 @@
-require 'rspec/core/rake_task'
+require 'rake/testtask'''
 
 task :default => :dev
 
-desc "Run all RSpec tests"
-RSpec::Core::RakeTask.new(:spec) do |test|
-  test.rspec_opts = "-r ./config/load"
+desc "Run all tests"
+Rake::TestTask.new do |t|
+  t.libs.push "lib"
+  t.ruby_opts = ["-r./config/load.rb"]
+  t.test_files = FileList['test/*_test.rb', 'spec/*_spec.rb']
+  t.verbose = true
 end
 
 desc "Run an interactive console for the project"
