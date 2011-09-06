@@ -19,5 +19,3 @@ desc "Run the application via rerun (auto-reloads on changes)"
 task :dev do
   system "bundle exec rerun -- rackup --server=thin"
 end
-
-
