@@ -35,7 +35,7 @@ module Sopcast
 
     def each(&block)
       begin
-        @sopcast = @conn.process(command, Sopcast::Process, block)
+        @sopcast = @conn.remote_process(command, Sopcast::Process, block)
         @sopcast.exec
       rescue Exception => e
         #puts e.backtrace
