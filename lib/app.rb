@@ -35,12 +35,8 @@ module Sopcast
     end
 
     def each(&block)
-      begin
-        @sopcast = @conn.remote_process(command, Sopcast::Process, block)
-        @sopcast.exec
-      rescue Exception => e
-        #puts e.backtrace
-      end
+      @sopcast = @conn.remote_process(command, Sopcast::Process, block)
+      @sopcast.exec
     end
   end
 end
@@ -55,17 +51,31 @@ class Sopserve < Sinatra::Base
                                       ENV["SOPCAST_PASS"])
   end
 
-  def page_url(prefix, source_url)
-    ("/listing/#{prefix}?id=" + Base64.encode64(source_url)).strip
+  def resource_url(id, type)
+    "/#{type}?id=#{id}"
   end
 
-  get "/listing/sports" do
-    content_type 'application/json'
-    listing = {}
-    SportTypes.new().get_all().each { |key, value|
-      listing[key] = page_url("sport", value)
+  def prepare_resources(resources, type)
+    result = []
+    resources.each { |resource|
+      resource[:url] = resource_url(resource[:id], type)
+      resource.delete(:id)
+      result << resource
     }
-    listing.to_json
+    result
+  end
+
+  get '/sport' do
+    content_type :json, :charset => 'utf-8'
+    leadtime = params[:leadtime].class == nil ? 30 : params[:leadtime].to_i
+    events = Sport.new(params[:id]).get_current_events(leadtime)
+    prepare_resources(events, :event).to_json
+  end
+
+  get "/sports" do
+    content_type :json, :charset => 'utf-8'
+    sports = SportTypes.new().get_all()
+    prepare_resources(sports, :sport).to_json
   end
 
   get %r{/channel/([0-9]+)} do |channel|
