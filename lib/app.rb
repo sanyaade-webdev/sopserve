@@ -1,4 +1,5 @@
 require 'ssh'
+require 'scraper'
 
 module Sopcast
   # Remote sopcast process handler
@@ -49,9 +50,22 @@ class Sopserve < Sinatra::Base
   register Sinatra::Synchrony
 
   def initialize
-    @connection = SSH::PersistentConnection.new(ENV["SOPCAST_HOST"],
-                                                ENV["SOPCAST_USER"],
-                                                ENV["SOPCAST_PASS"])
+    @connection = SSH::Connection.new(ENV["SOPCAST_HOST"],
+                                      ENV["SOPCAST_USER"],
+                                      ENV["SOPCAST_PASS"])
+  end
+
+  def page_url(prefix, source_url)
+    ("/listing/#{prefix}?id=" + Base64.encode64(source_url)).strip
+  end
+
+  get "/listing/sports" do
+    content_type 'application/json'
+    listing = {}
+    SportTypes.new().get_all().each { |key, value|
+      listing[key] = page_url("sport", value)
+    }
+    listing.to_json
   end
 
   get %r{/channel/([0-9]+)} do |channel|
