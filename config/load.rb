@@ -1,10 +1,14 @@
 $: << File.expand_path('../../lib',__FILE__)
 
 # bundled
+require 'base64'
+require 'hpricot'
+require "em-synchrony/em-http"
+require 'eventmachine'
+require 'json'
+require 'net/ssh'
 require 'sinatra/base'
 require 'sinatra/synchrony'
-require 'eventmachine'
-require 'net/ssh'
 
 # local
 require 'app'
