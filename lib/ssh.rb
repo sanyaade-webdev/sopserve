@@ -51,10 +51,9 @@ module SSH
     end
   end
 
-
-  # SSH::PersistentConnection is a class used to create and manage a
-  # reusable, long-lived connection to an SSH server.
-  class PersistentConnection
+  # SSH::Connection manages a connection to an SSH server, provides remote
+  # command invocation functionality.
+  class Connection
     def initialize(host, user, pass, registry = ConnectionRegistry.new)
       raise "Missing server credentials" if host.nil? || user.nil? || pass.nil?
       @host, @user, @pass, @registry = host, user, pass, registry
