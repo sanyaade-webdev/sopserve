@@ -7,6 +7,16 @@ module LiveTVScraper
     HTMLEntities.new.decode(response)
   end
 
+  def to_doc(response)
+    response = decode_response(response)
+    Nokogiri::HTML(fix_markup(response))
+  end
+
+  def fix_markup(markup)
+    markup = markup.gsub(/<\/tr>\s*<\/tr>/, "</tr>")
+    markup.gsub(/<\/tr>\s*<td>\s*<tr>/, "</tr><tr>")
+  end
+
   def full_url(path)
     "http://livetv.ru#{path}"
   end
@@ -47,9 +57,8 @@ class Sport
 
   def parse(response)
     events = []
-    response = decode_response(response)
-    doc = Hpricot(fix_markup(response), :fixup_tags => true)
-    doc.search("//div[@id='#{@div_id}]//td").each do |element|
+    doc = to_doc(response)
+    doc.xpath("//div[@id='#{@div_id}']//td").each do |element|
       next if not event_cell? element
       events << {
         :id => url_to_id(url(element)),
@@ -61,31 +70,26 @@ class Sport
     events
   end
 
-  def fix_markup(markup)
-    markup = markup.gsub(/<\/tr>\s*<\/tr>/, "</tr>")
-    markup.gsub(/<\/tr>\s*<td>\s*<tr>/, "</tr><tr>")
-  end
-
   def name(element)
-    element.at("//a").inner_html
+    element.at(".//a").inner_html
   end
 
   def url(element)
-    element.at("//a")[:href]
+    element.at(".//a")[:href]
   end
 
   def category(element)
-    category = detail(element).split("\n")[1]
-    category[1..-2] if not category.nil?
+    category = detail(element).split("(")[1]
+    category[0..-2] if not category.nil?
   end
 
   def time(element)
-    time = detail(element).split("\n")[0]
+    time = detail(element).split("(")[0]
     parse_time(time) if not time.nil?
   end
 
   def detail(element)
-    element.at("//span[@class='evdesc']").to_plain_text
+    element.at(".//span[@class='evdesc']").content
   end
 
   def parse_time(time)
@@ -115,9 +119,9 @@ class SportTypes
 
   def parse(response)
     result = []
-    doc = Hpricot(decode_response(response))
+    doc = to_doc(response)
     query = "//td[@background='http://img.livetv.ru/img/aubg.gif']/../.."
-    doc.search(query).each do |element|
+    doc.xpath(query).each do |element|
       url = url(element)
       name = name(element)
       next if url.nil? or name.nil?
@@ -136,6 +140,6 @@ class SportTypes
   end
 
   def name(element)
-    element.at("//span[@class='sltitle']").inner_html
+    element.at(".//span[@class='sltitle']").inner_html
   end
 end
