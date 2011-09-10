@@ -30,6 +30,55 @@ module LiveTVScraper
   end
 end
 
+class Event
+  include LiveTVScraper
+
+  def initialize(id)
+    @url = full_url(id_to_url(id))
+  end
+
+  def get_streams
+    result = EM::Synchrony.sync EventMachine::HttpRequest.new(@url).aget
+    parse(result.response)
+  end
+
+  private
+
+  def parse(response)
+    streams = []
+    doc = to_doc(response)
+    get_sopcast_cells(doc).each do |cell|
+      streams << {
+        :id => url_to_id(url(cell)),
+        :rating => rating(cell)
+      }
+    end
+    streams
+  end
+
+  def get_sopcast_cells(doc)
+    cells = []
+    doc.xpath(".//div[@id='links_block']//a").each do |link|
+      if link['href'].match(/^sop:\/\//)
+        cells << link.parent.parent
+      end
+    end
+    cells
+  end
+
+  def rating(element)
+    element.at(".//td[@class='rate']/div").content[1..-2].to_i
+  end
+
+  def url(element)
+    element.xpath(".//a").each do |link|
+      if link['href'].match(/^sop:\/\//)
+        return link['href']
+      end
+    end
+  end
+end
+
 class Sport
   include LiveTVScraper
 

@@ -65,6 +65,12 @@ class Sopserve < Sinatra::Base
     result
   end
 
+  get '/event' do
+    content_type :json, :charset => 'utf-8'
+    streams = Event.new(params[:id]).get_streams()
+    prepare_resources(streams, :stream).to_json
+  end
+
   get '/sport' do
     content_type :json, :charset => 'utf-8'
     leadtime = params[:leadtime].class == nil ? 30 : params[:leadtime].to_i
