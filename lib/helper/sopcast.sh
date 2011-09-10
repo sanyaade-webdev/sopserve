@@ -5,7 +5,7 @@
 # 2. Feeds the HTTP output to the caller via stdout.
 #
 
-sp-sc-auth sop://broker.sopcast.com:3912/#{@channel} 3908 #{@port} > /dev/null&
+sp-sc-auth #{@url} 3908 #{@port} > /dev/null&
 PID=$!
 
 function cleanup {

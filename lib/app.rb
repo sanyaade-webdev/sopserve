@@ -15,9 +15,9 @@ module Sopcast
 
   # Stream request handler
   class StreamHandler
-    def initialize(connection, channel)
+    def initialize(connection, url)
       @conn = connection
-      @channel = channel
+      @url = url
       @port = 8908
     end
 
@@ -84,8 +84,9 @@ class Sopserve < Sinatra::Base
     prepare_resources(sports, :sport).to_json
   end
 
-  get %r{/channel/([0-9]+)} do |channel|
-    Sopcast::StreamHandler.new(@connection, channel).tap { |stream|
+  get "/stream" do
+    url = Stream.new(params[:id]).url
+    Sopcast::StreamHandler.new(@connection, url).tap { |stream|
       env['async.close'].callback { stream.close }
     }
   end

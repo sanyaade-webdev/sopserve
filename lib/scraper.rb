@@ -30,6 +30,16 @@ module LiveTVScraper
   end
 end
 
+class Stream
+  include LiveTVScraper
+
+  attr_accessor :url
+
+  def initialize(id)
+    @url = id_to_url(id)
+  end
+end
+
 class Event
   include LiveTVScraper
 
