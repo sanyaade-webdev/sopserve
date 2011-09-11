@@ -45,11 +45,12 @@ end
 class Sopserve < Sinatra::Base
   register Sinatra::Synchrony
 
-  def initialize
-    @connection = SSH::Connection.new(ENV["SOPCAST_HOST"],
-                                      ENV["SOPCAST_USER"],
-                                      ENV["SOPCAST_PASS"])
-  end
+  def initialize(host = nil, user = nil, pass = nil)
+    host |= ENV["SOPCAST_HOST"]
+    user |= ENV["SOPCAST_USER"]
+    pass |= ENV["SOPCAST_PASS"]
+    @connection = SSH::Connection.new(host, user, pass)
+   end
 
   def resource_url(id, type)
     "/#{type}?id=#{id}"
@@ -76,6 +77,10 @@ class Sopserve < Sinatra::Base
     leadtime = params[:leadtime].class == nil ? 30 : params[:leadtime].to_i
     events = Sport.new(params[:id]).get_current_events(leadtime)
     prepare_resources(events, :event).to_json
+  end
+
+  get "/" do
+    return "here"
   end
 
   get "/sports" do
