@@ -4,9 +4,9 @@ task :default => :dev
 
 desc "Run all tests"
 Rake::TestTask.new do |t|
-  t.libs.push "lib"
+  t.libs.push ["lib", "spec"]
   t.ruby_opts = ["-r./config/load.rb"]
-  t.test_files = FileList['test/*_test.rb', 'spec/*_spec.rb']
+  t.test_files = FileList['spec/*_spec.rb']
   t.verbose = true
 end
 
@@ -18,4 +18,9 @@ end
 desc "Run the application via rerun (auto-reloads on changes)"
 task :dev do
   system "bundle exec rerun -- rackup --server=thin"
+end
+
+desc "Run the tests via watchr (auto-reloads on changes)"
+task :tdd do
+  system "bundle exec watchr spec/spec.watchr"
 end

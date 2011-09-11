@@ -12,5 +12,8 @@ gem 'sinatra-synchrony', '0.2.0'
 gem 'thin', '1.2.11'
 
 group :development do
+  gem 'autowatchr', '0.1.5'
+  gem 'mynyml-redgreen', '0.7.1'
   gem 'rerun', '0.6.2'
+  gem 'watchr', '0.7'
 end
