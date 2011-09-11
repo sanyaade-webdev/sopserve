@@ -1,11 +1,10 @@
 require 'rake/testtask'''
 
-task :default => :dev
+task :default => :test
 
 desc "Run all tests"
 Rake::TestTask.new do |t|
   t.libs.push ["lib", "spec"]
-  t.ruby_opts = ["-r./config/load.rb"]
   t.test_files = FileList['spec/*_spec.rb']
   t.verbose = true
 end
