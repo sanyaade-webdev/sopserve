@@ -15,6 +15,7 @@ group :development do
   gem 'autowatchr', '0.1.5'
   gem 'mynyml-redgreen', '0.7.1'
   gem 'rack-test', '0.6.1'
+  gem 'rake', '0.9.2'
   gem 'rerun', '0.6.2'
   gem 'watchr', '0.7'
   gem 'webmock', '1.7.6'
