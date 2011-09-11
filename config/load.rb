@@ -13,7 +13,9 @@ require 'nokogiri'
 require 'sinatra/base'
 require 'sinatra/synchrony'
 
-# local
-require 'app'
-require 'net/async_ssh'
+# local extensions
+require 'ext/async_ssh'
+require 'ext/ssh'
 
+# app
+require 'app'

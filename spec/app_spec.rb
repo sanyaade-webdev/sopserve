@@ -5,7 +5,7 @@ describe Sopserve do
 
   before do
     stub_request(:get, 'http://livetv.ru/en/allupcoming/')
-      .to_return(:body => get_test_html("sports_index"), :status => 200)
+      .to_return(:body => get_test_html(:sports_index), :status => 200)
   end
 
   def app
@@ -18,10 +18,10 @@ describe Sopserve do
 
   it "can extract the list of sports from the livetv website" do
     get "/sports"
-    sport_names = JSON.parse(last_response.body).collect { |s| s["name"] }
+    sports = JSON.parse(last_response.body).collect { |sport| sport["name"] }
     assert_empty ["Football", "Ice Hockey", "Basketball", "Tennis",
                   "Volleyball", "Racing", "Rugby League", "Baseball",
                   "Beach Soccer", "American Football", "Billiard",
-                  "Rugby Union", "Cycling", "Cricket"] - sport_names
+                  "Rugby Union", "Cycling", "Cricket"] - sports
   end
 end
