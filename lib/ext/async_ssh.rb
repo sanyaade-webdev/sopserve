@@ -1,3 +1,6 @@
+# Makes Net::SSH work with eventmachine's runloop.
+# Code ripped from https://github.com/joshado/eventmachine-async-block and
+# tweaked to expect Ruby 1.9's fibers.
 module Net;
   class FiberSelect
     attr_reader :result
