@@ -1,5 +1,9 @@
 $: << File.expand_path('../../lib',__FILE__)
 
+# ensure bundler runs
+require 'rubygems'
+require 'bundler/setup'
+
 # bundled
 require 'active_support/core_ext'
 require 'base64'
