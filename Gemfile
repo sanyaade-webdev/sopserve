@@ -17,6 +17,8 @@ group :development do
   gem 'rack-test', '0.6.1'
   gem 'rake', '0.9.2'
   gem 'rerun', '0.6.2'
+  gem 'vlad', '2.2.2'
+  gem 'vlad-git', '2.2.0'
   gem 'watchr', '0.7'
   gem 'webmock', '1.7.6'
 end

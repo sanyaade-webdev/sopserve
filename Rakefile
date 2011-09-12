@@ -1,4 +1,7 @@
-require 'rake/testtask'''
+require 'rake/testtask'
+require 'vlad'
+
+Vlad.load :scm => :git
 
 task :default => :test
 Rake::TestTask.new do |t|
