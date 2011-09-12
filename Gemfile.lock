@@ -25,6 +25,7 @@ GEM
     htmlentities (4.3.0)
     http_parser.rb (0.5.2)
     i18n (0.6.0)
+    minitest (2.5.1)
     multi_json (1.0.3)
     mynyml-redgreen (0.7.1)
       term-ansicolor (>= 1.0.4)
@@ -78,6 +79,7 @@ DEPENDENCIES
   eventmachine
   htmlentities
   i18n
+  minitest
   mynyml-redgreen
   net-ssh
   nokogiri
