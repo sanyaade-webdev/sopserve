@@ -27,8 +27,13 @@ task :console do
   system "bundle exec irb -r ./config/load"
 end
 
+desc "Deploy code to the production server"
+task :deploy => ['vlad:update', 'vlad:bundle:install']
+
 begin
   require "vlad"
   Vlad.load :scm => :git
 rescue LoadError
 end
+
+
