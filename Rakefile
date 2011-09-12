@@ -9,7 +9,7 @@ end
 
 desc "Run an interactive console for the project"
 task :console do
-  system "irb -r ./config/load"
+  system "bundle exec irb -r ./config/load"
 end
 
 desc "Run the application (auto-reloads on changes)"
