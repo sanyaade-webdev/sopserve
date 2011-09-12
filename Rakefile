@@ -7,9 +7,9 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-desc "Run an interactive console for the project"
-task :console do
-  system "bundle exec irb -r ./config/load"
+desc "Run the application"
+task :run do
+  system "bundle exec rackup --server=thin"
 end
 
 desc "Run the application (auto-reloads on changes)"
@@ -20,6 +20,11 @@ end
 desc "Run the tests continuously"
 task :tdd do
   system "bundle exec watchr spec/spec.watchr"
+end
+
+desc "Run an interactive console for the project"
+task :console do
+  system "bundle exec irb -r ./config/load"
 end
 
 begin
