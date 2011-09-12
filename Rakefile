@@ -1,7 +1,4 @@
 require 'rake/testtask'
-require 'vlad'
-
-Vlad.load :scm => :git
 
 task :default => :test
 Rake::TestTask.new do |t|
@@ -23,4 +20,10 @@ end
 desc "Run the tests continuously"
 task :tdd do
   system "bundle exec watchr spec/spec.watchr"
+end
+
+begin
+  require "vlad"
+  Vlad.load :scm => :git
+rescue LoadError
 end
