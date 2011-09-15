@@ -6,7 +6,8 @@
 
 # Build system
 
-- disable irrelevant build tasks on deployment hosts
+- manage thin using vlad.
+- finish vlad ubuntu integration.
 
 # Front-end
 
