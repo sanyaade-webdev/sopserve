@@ -2,6 +2,7 @@ libdir = File.expand_path('lib', File.dirname(__FILE__))
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'rake/testtask'
+Dir.glob('lib/tasks/*.rake').each { |r| import r }
 
 task :default => :test
 Rake::TestTask.new do |t|
@@ -28,15 +29,6 @@ end
 desc "Run an interactive console for the project"
 task :console do
   system "bundle exec irb -r ./config/load"
-end
-
-desc "Deploy code to the production server"
-task :deploy => ['vlad:update', 'vlad:bundle:install']
-
-begin
-  require "vlad"
-  Vlad.load :scm => :git
-rescue LoadError
 end
 
 
