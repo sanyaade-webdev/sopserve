@@ -3,7 +3,7 @@ begin
   require "bundler/vlad"
 
   begin
-    Vlad.load :scm => :git
+    Vlad.load :scm => :git, :web => :nginx
   rescue Exception => e
     puts "Error loading vlad: #{e}"
     exit
